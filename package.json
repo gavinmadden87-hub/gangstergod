@@ -1,5 +1,5 @@
  {
-  JSON.parse (<anonymous>)
+   (<anonymous>)
   "scripts": {
     "dev": "next dev",
     "build": "next build",
