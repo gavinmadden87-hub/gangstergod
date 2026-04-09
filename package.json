@@ -1,4 +1,11 @@
 {
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
+}
+
   "name": "gangster-god-os",
   "version": "1.0.0",
   "private": true,
