@@ -1,4 +1,42 @@
-@tailwind base;
+import { NextRequest, NextResponse } from "next/server";
+
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const MODEL = "gpt-4o-mini"; // change if you prefer another model
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
+    }
+
+    // Accept either { messages: [...] } or { prompt: "..." }
+    const payload: any = body.messages
+      ? { model: MODEL, messages: body.messages }
+      : { model: MODEL, messages: [{ role: "user", content: body.prompt ?? "" }] };
+
+    const res = await fetch(OPENAI_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return NextResponse.json({ error: data }, { status: res.status });
+    }
+
+    return NextResponse.json(data);
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message ?? "Unknown error" }, { status: 500 });
+  }
+}
+tailwind base;
 @tailwind components;
 @tailwind utilities;
 
