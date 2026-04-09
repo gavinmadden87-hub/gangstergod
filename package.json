@@ -1,4 +1,5 @@
-{
+vercel/path0/package.json: Unexpected non-whitespace character after JSON at position 102
+    at JSON.parse (<anonymous>)
   "scripts": {
     "dev": "next dev",
     "build": "next build",
