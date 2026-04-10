@@ -1,0 +1,12 @@
+gangstergod/
+│
+├── core/
+│   ├── location.js          ✅ NEW
+│   ├── insights.js          ✅ NEW
+│   ├── mutation.js          ✅ NEW
+│   ├── revenue.js           ✅ NEW
+│   ├── tracker.js           (existing)
+│
+├── data/
+│   ├── revenue.json         ✅ NEW
+│   ├── locations.json       ✅ NEW
