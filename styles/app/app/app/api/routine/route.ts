@@ -41,3 +41,22 @@ Return JSON:
   const content = completion.choices[0].message.content;
   return NextResponse.json(JSON.parse(content ?? "{}"));
 }
+
+  "nonNegotiables": string[]
+}
+`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4.1-mini",
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    response_format: { type: "json_object" },
+  });
+
+  const content = completion.choices[0].message.content;
+  return NextResponse.json(JSON.parse(content ?? "{}"));
+}
