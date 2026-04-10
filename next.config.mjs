@@ -1,11 +1,8 @@
-npm install
-# create .env.local as shown above
-npm run dev
- @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true
-  }
+  reactStrictMode: true,
+  // your other settings (images, headers, redirects, etc.)
+  // Do NOT put commands or text here
 };
 
 export default nextConfig;
