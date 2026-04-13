@@ -1,0 +1,52 @@
+name: Deploy Shopify App
+
+on:
+  push:
+    branches: [ main ]   # ← Change this to your production branch (e.g. main, master, production)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'   # Change to 'yarn' or 'pnpm' if you use a different package manager
+
+      - name: Install dependencies
+        run: npm ci
+
+      # === 1. Deploy your web app first (critical!) ===
+      # Replace this with your actual hosting deployment command
+      # Examples:
+      #   Vercel → vercel deploy --prod
+      #   Render → (often handled automatically via Git integration - you can remove this step)
+      #   Fly.io → flyctl deploy
+      #   Railway, Netlify, etc. → your specific command
+      - name: Deploy web app
+        run: npm run deploy:web || echo "No web deploy script - skipping or using Git integration"
+        env:
+          NODE_ENV: production
+          # Add other secrets/env vars your web app needs here
+
+      # === 2. Deploy Shopify app config + extensions ===
+      - name: Deploy to Shopify (config & extensions)
+        env:
+          SHOPIFY_CLI_PARTNERS_TOKEN: ${{ secrets.SHOPIFY_CLI_PARTNERS_TOKEN }}
+          # Alternative (less recommended):
+          # SHOPIFY_APP_API_KEY: ${{ secrets.SHOPIFY_APP_API_KEY }}
+          # SHOPIFY_APP_SECRET: ${{ secrets.SHOPIFY_APP_SECRET }}
+        run: |
+          COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+
+          npx shopify app deploy \
+            --config production \           # Change to your actual config name if different
+            --allow-updates \               # Required for CI/CD (force flag is deprecated)
+            --no-build \                    # Skip build if your web deploy already handled it
+            --source-control-url "$COMMIT_URL" \
+            --message "GitHub Actions deploy - ${{ github.sha }}"
