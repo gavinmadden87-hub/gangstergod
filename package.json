@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },
+  }
   "dependencies": {
     "@ai-sdk/xai": "^1.0.5",
     "ai": "^4.0.3",
