@@ -1,0 +1,6 @@
+vercel-fastapi/
+├── api/                  ← Create this folder
+│   └── index.py          ← Main FastAPI code goes here (most common for Vercel)
+├── requirements.txt      ← Dependencies
+├── vercel.json           ← Vercel configuration (very important)
+└── README.md             ← Optional: instructions for you and Jason
