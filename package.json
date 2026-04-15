@@ -1,4 +1,5 @@
  {
+  npm install next@latest
   "name": "heartless-575-legion",
   "version": "0.1.0",
   "private": true,
