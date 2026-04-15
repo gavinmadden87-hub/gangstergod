@@ -1,5 +1,16 @@
  {
-  npm install next@latest
+  {
+  "name": "heartless-575-legion",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  ...
+
   "name": "heartless-575-legion",
   "version": "0.1.0",
   "private": true,
