@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/next';
+import React from 'react';
 import '../styles/globals.css';
 
 export const metadata = {
@@ -6,7 +7,7 @@ export const metadata = {
   description: "Move with discipline, silence, and unshakeable control."
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
