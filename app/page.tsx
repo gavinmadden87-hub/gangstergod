@@ -6,16 +6,29 @@ export default function Home() {
   const [focus, setFocus] = useState("discipline");
   const [routine, setRoutine] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const generate = async () => {
     setLoading(true);
-    const res = await fetch("/api/routine", {
-      method: "POST",
-      body: JSON.stringify({ focus })
-    });
-    const data = await res.json();
-    setRoutine(data);
-    setLoading(false);
+    setError(null);
+    try {
+      const res = await fetch("/api/routine", {
+        method: "POST",
+        body: JSON.stringify({ focus })
+      });
+      
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status} ${res.statusText}`);
+      }
+      
+      const data = await res.json();
+      setRoutine(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate routine");
+      setRoutine(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +47,13 @@ export default function Home() {
       >
         {loading ? "Loading..." : "Generate"}
       </button>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-900 border border-red-700 rounded text-red-100">
+          <p className="font-semibold">Error</p>
+          <p>{error}</p>
+        </div>
+      )}
 
       {routine && (
         <div className="mt-8 space-y-4">
