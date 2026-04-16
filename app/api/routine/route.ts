@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { openai } from "@/lib/ai/client";
+import { getOpenAIClient } from "@/lib/ai/client";
 import { gangsterGodCorePrompt } from "@/lib/ai/prompts/gangsterGodCore";
 
 export async function POST(req: NextRequest) {
@@ -31,6 +31,7 @@ Return JSON:
 }
 `;
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }]
