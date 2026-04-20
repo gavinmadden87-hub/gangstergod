@@ -1,60 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-const MODEL = "gpt-4o-mini";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+  line-height: 1.6;
+}
 
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: "Missing OPENAI_API_KEY in environment variables" },
-        { status: 500 }
-      );
-    }
+html {
+  scroll-behavior: smooth;
+}
 
-    // Support both { messages: [...] } and { prompt: "..." }
-    const messages = body.messages || [
-      { role: "user" as const, content: body.prompt ?? "" }
-    ];
-
-    const payload = {
-      model: MODEL,
-      messages,
-      temperature: 0.7,
-      max_tokens: 1000,
-    };
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      return NextResponse.json(
-        { error: errorData.error?.message || "OpenAI API error" },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-
-    return NextResponse.json({
-      success: true,
-      content: data.choices?.[0]?.message?.content || "",
-      usage: data.usage,
-    });
-
-  } catch (error: any) {
-    console.error("API route error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
-  }
+a {
+  color: inherit;
+  text-decoration: none;
 }
