@@ -4,3 +4,4 @@ module.exports = {
     autoprefixer: {}
   }
 };
+npx vercel --prod --yes
