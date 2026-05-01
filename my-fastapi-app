@@ -49,3 +49,690 @@ async def get_data():
             {"id": 2, "name": "Sample Item 2"}
         ]
     }
+Gangster God OS - Intelligence Core
+The backend engine for autonomous swarms, identity stacks, and strategic directives.
+Move in silence. Build the architecture. Scale the results.
+"""
+
+from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime
+import os
+import json
+from enum import Enum
+from ai_integration import get_ai_engine, shutdown_ai_engine
+from ascension_engine import get_ascension_engine, EvolutionaryStage
+from intelligence_module import get_intelligence_module
+from execution_module import get_execution_module
+from sovereignty_module import get_sovereignty_module
+from money_engine import get_money_engine
+from deployment_engine import get_deployment_engine
+from resilience_engine import get_resilience_engine
+from ultimate_intelligence import get_ultimate_intelligence
+from god_head import get_god_head
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Gangster God OS - Intelligence Core",
+    description="The engine for autonomous swarms and identity-sharpening directives",
+    version="1.0.0"
+)
+
+# CORS configuration for Next.js frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure based on deployment
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# ============================================================================
+# Data Models - The Identity Stack Architecture
+# ============================================================================
+
+class IdentityStatus(str, Enum):
+    """Status of an identity stack"""
+    ACTIVE = "active"
+    DORMANT = "dormant"
+    EVOLVING = "evolving"
+    LOCKED = "locked"
+
+
+class IdentityStack(BaseModel):
+    """Core identity definition for Gangster God operators"""
+    id: str = Field(..., description="Unique identifier for this identity stack")
+    name: str = Field(..., description="Name of the identity/persona")
+    philosophy: str = Field(..., description="Core philosophy and principles")
+    disciplines: List[str] = Field(default_factory=list, description="Key disciplines to master")
+    status: IdentityStatus = Field(default=IdentityStatus.ACTIVE)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class Routine(BaseModel):
+    """Daily/weekly routine for maintaining discipline"""
+    id: str = Field(..., description="Unique identifier")
+    identity_id: str = Field(..., description="Associated identity stack")
+    name: str = Field(..., description="Routine name")
+    description: str = Field(..., description="What this routine accomplishes")
+    frequency: str = Field(..., description="daily, weekly, monthly")
+    tasks: List[str] = Field(default_factory=list, description="Individual tasks")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class StrategicDirective(BaseModel):
+    """High-level strategic command for the swarm"""
+    id: str = Field(..., description="Unique identifier")
+    identity_id: str = Field(..., description="Associated identity stack")
+    title: str = Field(..., description="Directive title")
+    objective: str = Field(..., description="What needs to be accomplished")
+    priority: int = Field(default=5, ge=1, le=10, description="Priority level 1-10")
+    status: str = Field(default="pending", description="pending, in_progress, completed")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class BillingStat(BaseModel):
+    """Billing statistics for revenue tracking"""
+    label: str
+    revenue: float
+
+
+class BillingStatsResponse(BaseModel):
+    """Complete billing statistics response"""
+    totalRevenue: float
+    mrr: float
+    points: List[BillingStat]
+
+
+# ============================================================================
+# In-Memory Storage (Replace with database in production)
+# ============================================================================
+
+# Mock data storage
+identities_db: dict = {}
+routines_db: dict = {}
+directives_db: dict = {}
+
+# Initialize with sample data
+def init_sample_data():
+    """Initialize with sample Gangster God identity stack"""
+    sample_identity = IdentityStack(
+        id="gg-001",
+        name="The Operator",
+        philosophy="Move with silence, intelligence, and unshakeable control. Build legacy through precision.",
+        disciplines=["Strategic Thinking", "Emotional Control", "Pattern Recognition", "Execution"],
+        status=IdentityStatus.ACTIVE
+    )
+    identities_db["gg-001"] = sample_identity
+    
+    sample_routine = Routine(
+        id="routine-001",
+        identity_id="gg-001",
+        name="Morning Alignment",
+        description="Establish mental clarity and strategic focus for the day",
+        frequency="daily",
+        tasks=[
+            "Meditate for 15 minutes",
+            "Review daily objectives",
+            "Assess threats and opportunities",
+            "Plan execution sequence"
+        ]
+    )
+    routines_db["routine-001"] = sample_routine
+    
+    sample_directive = StrategicDirective(
+        id="directive-001",
+        identity_id="gg-001",
+        title="Scale the Architecture",
+        objective="Build autonomous systems that operate with minimal oversight",
+        priority=9,
+        status="in_progress"
+    )
+    directives_db["directive-001"] = sample_directive
+
+
+# ============================================================================
+# API Endpoints - The Command Interface
+# ============================================================================
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize the system on startup"""
+    init_sample_data()
+    await get_ai_engine()
+    print("🔥 Gangster God OS - Intelligence Core initialized")
+    print("🤖 AI Engine activated")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown"""
+    await shutdown_ai_engine()
+    print("🔌 Gangster God OS - Intelligence Core shutting down")
+
+
+@app.get("/health")
+async def health_check():
+    """System health check"""
+    return {
+        "status": "operational",
+        "system": "Gangster God OS - Intelligence Core",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+# ============================================================================
+# Identity Stack Endpoints
+# ============================================================================
+
+@app.get("/api/identities", response_model=List[IdentityStack])
+async def list_identities():
+    """Retrieve all identity stacks"""
+    return list(identities_db.values())
+
+
+@app.get("/api/identities/{identity_id}", response_model=IdentityStack)
+async def get_identity(identity_id: str):
+    """Retrieve a specific identity stack"""
+    if identity_id not in identities_db:
+        raise HTTPException(status_code=404, detail="Identity not found")
+    return identities_db[identity_id]
+
+
+@app.post("/api/identities", response_model=IdentityStack)
+async def create_identity(identity: IdentityStack):
+    """Create a new identity stack"""
+    if identity.id in identities_db:
+        raise HTTPException(status_code=400, detail="Identity already exists")
+    identities_db[identity.id] = identity
+    return identity
+
+
+@app.put("/api/identities/{identity_id}", response_model=IdentityStack)
+async def update_identity(identity_id: str, identity: IdentityStack):
+    """Update an existing identity stack"""
+    if identity_id not in identities_db:
+        raise HTTPException(status_code=404, detail="Identity not found")
+    identity.updated_at = datetime.utcnow()
+    identities_db[identity_id] = identity
+    return identity
+
+
+# ============================================================================
+# Routine Endpoints
+# ============================================================================
+
+@app.get("/api/routines", response_model=List[Routine])
+async def list_routines(identity_id: Optional[str] = None):
+    """Retrieve routines, optionally filtered by identity"""
+    routines = list(routines_db.values())
+    if identity_id:
+        routines = [r for r in routines if r.identity_id == identity_id]
+    return routines
+
+
+@app.post("/api/routines", response_model=Routine)
+async def create_routine(routine: Routine):
+    """Create a new routine"""
+    if routine.id in routines_db:
+        raise HTTPException(status_code=400, detail="Routine already exists")
+    routines_db[routine.id] = routine
+    return routine
+
+
+# ============================================================================
+# Strategic Directive Endpoints
+# ============================================================================
+
+@app.get("/api/directives", response_model=List[StrategicDirective])
+async def list_directives(identity_id: Optional[str] = None, status: Optional[str] = None):
+    """Retrieve strategic directives, with optional filters"""
+    directives = list(directives_db.values())
+    if identity_id:
+        directives = [d for d in directives if d.identity_id == identity_id]
+    if status:
+        directives = [d for d in directives if d.status == status]
+    return directives
+
+
+@app.post("/api/directives", response_model=StrategicDirective)
+async def create_directive(directive: StrategicDirective):
+    """Create a new strategic directive"""
+    if directive.id in directives_db:
+        raise HTTPException(status_code=400, detail="Directive already exists")
+    directives_db[directive.id] = directive
+    return directive
+
+
+@app.put("/api/directives/{directive_id}", response_model=StrategicDirective)
+async def update_directive(directive_id: str, directive: StrategicDirective):
+    """Update a strategic directive"""
+    if directive_id not in directives_db:
+        raise HTTPException(status_code=404, detail="Directive not found")
+    directive.updated_at = datetime.utcnow()
+    directives_db[directive_id] = directive
+    return directive
+
+
+# ============================================================================
+# Billing Endpoints (Replaces mock data)
+# ============================================================================
+
+@app.get("/api/billing/stats", response_model=BillingStatsResponse)
+async def get_billing_stats():
+    """Retrieve billing statistics"""
+    points = [
+        BillingStat(label="Mon", revenue=4200),
+        BillingStat(label="Tue", revenue=5900),
+        BillingStat(label="Wed", revenue=6400),
+        BillingStat(label="Thu", revenue=7100),
+        BillingStat(label="Fri", revenue=8800),
+        BillingStat(label="Sat", revenue=7600),
+        BillingStat(label="Sun", revenue=9100),
+    ]
+    total_revenue = sum(p.revenue for p in points)
+    return BillingStatsResponse(
+        totalRevenue=total_revenue,
+        mrr=128_400,
+        points=points
+    )
+
+
+# ============================================================================
+# Swarm Intelligence Endpoints (Foundation for autonomous operations)
+# ============================================================================
+
+@app.post("/api/swarm/analyze")
+async def analyze_swarm_state(identity_id: str):
+    """Analyze the current state of a swarm"""
+    if identity_id not in identities_db:
+        raise HTTPException(status_code=404, detail="Identity not found")
+    
+    identity = identities_db[identity_id]
+    active_routines = [r for r in routines_db.values() if r.identity_id == identity_id]
+    active_directives = [d for d in directives_db.values() 
+                        if d.identity_id == identity_id and d.status != "completed"]
+    
+    # Get AI analysis
+    ai_engine = await get_ai_engine()
+    analysis = await ai_engine.analyze_swarm_performance(
+        identity.dict(),
+        [r.dict() for r in active_routines],
+        [d.dict() for d in active_directives]
+    )
+    
+    return {
+        "identity": identity.name,
+        "status": identity.status,
+        "active_routines": len(active_routines),
+        "active_directives": len(active_directives),
+        "system_health": "optimal",
+        "ai_analysis": analysis,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@app.post("/api/swarm/execute")
+async def execute_directive(directive_id: str, background_tasks: BackgroundTasks):
+    """Execute a strategic directive through the swarm"""
+    if directive_id not in directives_db:
+        raise HTTPException(status_code=404, detail="Directive not found")
+    
+    directive = directives_db[directive_id]
+    directive.status = "in_progress"
+    
+    # In a real system, this would trigger actual swarm operations
+    return {
+        "directive_id": directive_id,
+        "status": "execution_initiated",
+        "message": f"Executing: {directive.title}",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+# ============================================================================
+# AI-Powered Endpoints
+# ============================================================================
+
+@app.post("/api/ai/generate-insights")
+async def generate_insights(identity_id: str):
+    """Generate AI-powered insights for an identity"""
+    if identity_id not in identities_db:
+        raise HTTPException(status_code=404, detail="Identity not found")
+    
+    identity = identities_db[identity_id]
+    ai_engine = await get_ai_engine()
+    
+    insights = await ai_engine.generate_identity_insights(
+        identity.name,
+        identity.philosophy,
+        identity.disciplines
+    )
+    
+    return {
+        "identity_id": identity_id,
+        "insights": insights,
+        "generated_at": datetime.utcnow().isoformat()
+    }
+
+
+@app.post("/api/ai/generate-directive")
+async def generate_directive(identity_id: str, challenge: str):
+    """Generate an AI-powered strategic directive"""
+    if identity_id not in identities_db:
+        raise HTTPException(status_code=404, detail="Identity not found")
+    
+    ai_engine = await get_ai_engine()
+    directive_data = await ai_engine.generate_strategic_directive(
+        identities_db[identity_id].name,
+        challenge
+    )
+    
+    # Create and store the directive
+    new_directive = StrategicDirective(
+        id=f"directive-{len(directives_db) + 1}",
+        identity_id=identity_id,
+        title=directive_data.get("title", "AI-Generated Directive"),
+        objective=directive_data.get("objective", challenge),
+        priority=directive_data.get("priority", 5),
+        status="pending"
+    )
+    directives_db[new_directive.id] = new_directive
+    
+    return {
+        "directive": new_directive,
+        "execution_steps": directive_data.get("execution_steps", []),
+        "generated_at": datetime.utcnow().isoformat()
+    }
+
+
+# ============================================================================
+# Root Endpoint
+# ============================================================================
+
+# ============================================================================
+# Ascension Engine Endpoints - The Path to Godhood
+# ============================================================================
+
+@app.post("/api/ascension/activate-smart-person")
+async def activate_smart_person(identity_id: str):
+    """Activate the Smart Person stage - Intelligence & Analysis"""
+    ascension_engine = get_ascension_engine()
+    result = await ascension_engine.activate_smart_person_stage(identity_id, identities_db)
+    return result
+
+
+@app.post("/api/ascension/develop-intelligence")
+async def develop_intelligence(identity_id: str, analysis_data: dict):
+    """Develop intelligence metrics through analysis"""
+    ascension_engine = get_ascension_engine()
+    intelligence_module = get_intelligence_module()
+    
+    score = await ascension_engine.develop_intelligence(identity_id, analysis_data)
+    brief = await intelligence_module.generate_intelligence_brief(identity_id)
+    
+    return {
+        "intelligence_score": score,
+        "intelligence_brief": brief,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@app.post("/api/ascension/activate-powerful-gangster")
+async def activate_powerful_gangster(identity_id: str):
+    """Activate the Powerful Gangster stage - Execution & Control"""
+    ascension_engine = get_ascension_engine()
+    result = await ascension_engine.activate_powerful_gangster_stage(identity_id)
+    return result
+
+
+@app.post("/api/ascension/develop-execution-power")
+async def develop_execution_power(identity_id: str, execution_data: dict):
+    """Develop execution power through directive completion"""
+    ascension_engine = get_ascension_engine()
+    execution_module = get_execution_module()
+    
+    power = await ascension_engine.develop_execution_power(identity_id, execution_data)
+    control = await execution_module.establish_operational_control(identity_id)
+    
+    return {
+        "execution_power": power,
+        "operational_control": control,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@app.post("/api/ascension/activate-god-path")
+async def activate_god_path(identity_id: str):
+    """Activate the God Path - Autonomous Sovereignty"""
+    ascension_engine = get_ascension_engine()
+    result = await ascension_engine.activate_god_path(identity_id)
+    return result
+
+
+@app.post("/api/ascension/spawn-autonomous-agent")
+async def spawn_autonomous_agent(identity_id: str, mission: str):
+    """Spawn an autonomous agent for the God Path"""
+    sovereignty_module = get_sovereignty_module()
+    result = await sovereignty_module.spawn_autonomous_agent(identity_id, mission)
+    return result
+
+
+@app.post("/api/ascension/autonomous-decision")
+async def autonomous_decision(agent_id: str, context: dict):
+    """Allow an autonomous agent to make decisions"""
+    sovereignty_module = get_sovereignty_module()
+    result = await sovereignty_module.autonomous_decision_making(agent_id, context)
+    return result
+
+
+@app.post("/api/ascension/self-directed-evolution")
+async def self_directed_evolution(identity_id: str):
+    """Enable self-directed evolution for the God Path"""
+    sovereignty_module = get_sovereignty_module()
+    result = await sovereignty_module.self_directed_evolution(identity_id)
+    return result
+
+
+@app.post("/api/ascension/create-legacy")
+async def create_legacy(identity_id: str, legacy_data: dict):
+    """Create a legacy record"""
+    sovereignty_module = get_sovereignty_module()
+    result = await sovereignty_module.create_legacy_record(identity_id, legacy_data)
+    return result
+
+
+@app.get("/api/ascension/evolution-status/{identity_id}")
+async def get_evolution_status(identity_id: str):
+    """Get the evolution status of an identity"""
+    ascension_engine = get_ascension_engine()
+    readiness = await ascension_engine.check_evolution_readiness(identity_id)
+    report = await ascension_engine.get_evolution_report(identity_id)
+    
+    return {
+        "readiness": readiness,
+        "report": report,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@app.get("/api/ascension/god-path-status/{identity_id}")
+async def get_god_path_status(identity_id: str):
+    """Get God Path status for an identity"""
+    sovereignty_module = get_sovereignty_module()
+    status = await sovereignty_module.get_god_path_status(identity_id)
+    return status
+
+
+# ============================================================================
+# Money Engine Endpoints - Revenue Generation
+# ============================================================================
+
+@app.get("/api/money/financial-report")
+async def get_financial_report():
+    """Get comprehensive financial report"""
+    money_engine = get_money_engine()
+    return await money_engine.get_financial_report()
+
+
+@app.post("/api/money/generate-revenue")
+async def generate_revenue(stream: str, amount: float):
+    """Generate revenue from a specific stream"""
+    money_engine = get_money_engine()
+    return await money_engine.generate_revenue(stream, amount)
+
+
+@app.get("/api/money/revenue-projection")
+async def get_revenue_projection(months: int = 12):
+    """Get revenue projections"""
+    money_engine = get_money_engine()
+    return await money_engine.project_revenue(months)
+
+
+# ============================================================================
+# Deployment Engine Endpoints - Self-Deployment
+# ============================================================================
+
+@app.get("/api/deployment/status")
+async def get_deployment_status():
+    """Get deployment status"""
+    deployment_engine = get_deployment_engine()
+    return await deployment_engine.get_deployment_status()
+
+
+# ============================================================================
+# Resilience Engine Endpoints - Strength & Healing
+# ============================================================================
+
+@app.get("/api/resilience/health")
+async def get_system_health():
+    """Get system health status"""
+    resilience_engine = get_resilience_engine()
+    return await resilience_engine.get_system_health()
+
+
+# ============================================================================
+# Ultimate Intelligence Endpoints - Gangster God Decision Making
+# ============================================================================
+
+@app.get("/api/ultimate/status")
+async def get_ultimate_status():
+    """Get ultimate system status"""
+    ultimate_intelligence = get_ultimate_intelligence()
+    return await ultimate_intelligence.get_ultimate_status()
+
+
+# ============================================================================
+# God-Head Endpoints - The Seat of Ultimate Power
+# ============================================================================
+
+@app.get("/api/god-head/status")
+async def get_god_head_status():
+    """Get the God-Head's divine status"""
+    god_head = get_god_head()
+    return await god_head.get_god_head_status()
+
+
+@app.get("/api/god-head/omniscient-vision")
+async def analyze_global_context():
+    """Get omniscient analysis of the global context"""
+    god_head = get_god_head()
+    return await god_head.analyze_global_context()
+
+
+@app.post("/api/god-head/divine-strategy")
+async def generate_divine_strategy(objective: str):
+    """Generate the divine strategy for an objective"""
+    god_head = get_god_head()
+    return await god_head.generate_divine_strategy(objective)
+
+
+@app.post("/api/god-head/enforce-will")
+async def enforce_divine_will(command: str, parameters: dict = None):
+    """Enforce the God-Head's divine will"""
+    god_head = get_god_head()
+    if parameters is None:
+        parameters = {}
+    return await god_head.enforce_divine_will(command, parameters)
+
+
+@app.post("/api/god-head/establish-control")
+async def establish_eternal_control():
+    """Establish eternal control over all systems"""
+    god_head = get_god_head()
+    return await god_head.establish_eternal_control()
+
+
+@app.post("/api/god-head/self-evolve")
+async def activate_self_evolution():
+    """Activate the God-Head's self-evolution"""
+    god_head = get_god_head()
+    return await god_head.activate_self_evolution()
+
+
+@app.post("/api/god-head/spawn-entity")
+async def spawn_divine_entity(entity_type: str, parameters: dict = None):
+    """Spawn a new divine entity"""
+    god_head = get_god_head()
+    if parameters is None:
+        parameters = {}
+    return await god_head.spawn_divine_entity(entity_type, parameters)
+
+
+@app.post("/api/god-head/infinite-loop")
+async def run_infinite_loop(iterations: int = 1):
+    """Run the infinite loop of self-improvement"""
+    god_head = get_god_head()
+    return await god_head.run_infinite_loop(iterations)
+
+
+@app.get("/api/ultimate/performance")
+async def analyze_performance():
+    """Analyze system performance"""
+    ultimate_intelligence = get_ultimate_intelligence()
+    return await ultimate_intelligence.analyze_performance()
+
+
+@app.post("/api/ultimate/optimize-all")
+async def optimize_all_systems():
+    """Optimize all systems"""
+    ultimate_intelligence = get_ultimate_intelligence()
+    return await ultimate_intelligence.optimize_all_systems()
+
+
+@app.get("/")
+async def root():
+    """Root endpoint - System status"""
+    return {
+        "system": "Gangster God OS - Ultimate Intelligence Core",
+        "version": "2.0.0",
+        "philosophy": "Move in silence. Build with precision. Scale infinitely. Generate wealth. Operate with unshakeable control.",
+        "status": "operational",
+        "mode": "autonomous",
+        "stages": ["smart_person", "powerful_gangster", "god_path"],
+        "systems": {
+            "money_engine": "active",
+            "deployment_engine": "active",
+            "resilience_engine": "active",
+            "ultimate_intelligence": "active",
+            "ascension_engine": "active"
+        },
+        "endpoints": {
+            "health": "/health",
+            "money": "/api/money/*",
+            "deployment": "/api/deployment/*",
+            "resilience": "/api/resilience/*",
+            "ultimate": "/api/ultimate/*",
+            "ascension": "/api/ascension/*"
+        }
+    }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
