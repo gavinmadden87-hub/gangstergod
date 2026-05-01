@@ -5,7 +5,7 @@ import { gangsterGodCorePrompt } from "@/lib/ai/prompts/gangsterGodCore";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { focus } = body;
+    const focus = (body as { focus?: unknown } | null)?.focus;
 
     // Validate input
     if (!focus || typeof focus !== "string" || focus.trim().length === 0) {
