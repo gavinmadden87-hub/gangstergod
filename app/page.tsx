@@ -1,7 +1,13 @@
-import Link from "next/link";
+<label htmlFor="focus-input" className="sr-only">
+  Focus
+</label>
+<input
+  id="focus-input"
+  className="bg-zinc-900 border border-zinc-700 px-3 py-2 rounded"
+  value={focus}
+  onChange={(e) => setFocus(e.target.value)}
+/>
 
-export default function Home() {
-  return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
       {/* Background accent */}
       <div className="absolute inset-0 bg-[radial-gradient(at_center,#4C1D95_0%,transparent_70%)] opacity-30" />
