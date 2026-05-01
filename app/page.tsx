@@ -59,7 +59,7 @@ export default function Home() {
           <h2 className="text-xl font-semibold">Summary</h2>
           <p>{routine.summary}</p>
 
-          {routine.morning && (
+          {Array.isArray(routine.morning) && (
             <>
               <h3 className="font-semibold">Morning</h3>
               <ul className="list-disc ml-5">
