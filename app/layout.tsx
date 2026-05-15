@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import "../styles/globals.css";
 import { ToastProvider } from "../components/toast";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "GANGSTERGODOS - HEARTLESS 575",
@@ -14,7 +15,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body><ToastProvider>{children}</ToastProvider></body>
+      <body>
+        <ToastProvider>{children}</ToastProvider>
+        <Analytics />
+      </body>
     </html>
   );
 }
