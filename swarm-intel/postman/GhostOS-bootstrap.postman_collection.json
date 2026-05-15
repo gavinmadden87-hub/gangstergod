@@ -1,0 +1,47 @@
+{
+  "info": {
+    "name": "GhostOS Shopify Bootstrap",
+    "_postman_id": "ghostos-bootstrap-collection",
+    "description": "Collection to simulate Shopify webhooks and bootstrap checks (computes HMAC via pre-request script).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Simulate checkout_create webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Shopify-Hmac-Sha256",
+            "value": "{{x_hmac}}",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 12345,\n  \"cart_token\": \"test-cart-token\",\n  \"customer\": { \"email\": \"test@example.com\" },\n  \"total_price\": 220\n}"
+      },
+      "url": "{{runtime_url}}/api/webhooks/shopify/checkouts_create"
+    },
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "exec": [
+            "// Postman pre-request script computes HMAC using CryptoJS",
+            "const payload = pm.request.body.raw;",
+            "const secret = pm.environment.get('SHOPIFY_SHARED_SECRET');",
+            "const hash = CryptoJS.HmacSHA256(payload, secret).toString(CryptoJS.enc.Base64);",
+            "pm.environment.set('x_hmac', hash);"
+          ],
+          "type": "text/javascript"
+        }
+      }
+    ]
+    }
+  ]
+}
