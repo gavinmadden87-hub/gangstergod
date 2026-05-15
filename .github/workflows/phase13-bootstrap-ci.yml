@@ -1,0 +1,42 @@
+name: Phase13 Bootstrap CI
+on:
+  pull_request:
+    branches:
+      - add/ghostos-bootstrap-enhancements
+  push:
+    branches:
+      - add/ghostos-bootstrap-enhancements
+jobs:
+  test:
+    name: Run unit tests and bootstrap (3x)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install deps
+        run: npm ci
+        working-directory: swarm-intel
+      - name: Run unit tests
+        run: npm test
+        working-directory: swarm-intel
+      - name: Run bootstrap script 3 times (idempotent checks)
+        env:
+          SHOP: ${{ secrets.SHOP }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          RUNTIME_URL: ${{ secrets.RUNTIME_URL }}
+          DISCOUNT_CODE: ${{ secrets.DISCOUNT_CODE }}
+          DISCOUNT_PCT: ${{ secrets.DISCOUNT_PCT }}
+          DISCOUNT_EXPIRES: ${{ secrets.DISCOUNT_EXPIRES }}
+          LIMIT_TO_REPEAT_CUSTOMERS: ${{ secrets.LIMIT_TO_REPEAT_CUSTOMERS }}
+          PREFER_GRAPHQL: ${{ secrets.PREFER_GRAPHQL }}
+        run: |
+          set -euo pipefail
+          echo "Running bootstrap 3 times"
+          cd swarm-intel
+          for i in 1 2 3; do
+            echo "--- bootstrap run $i ---"
+            node ghostos-shopify-bootstrap.mjs
+          done
