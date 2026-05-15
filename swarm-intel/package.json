@@ -1,0 +1,11 @@
+{
+  "name": "swarm-intel-bootstrap",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "bootstrap": "node ghostos-shopify-bootstrap.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
