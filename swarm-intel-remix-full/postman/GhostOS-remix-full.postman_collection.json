@@ -1,0 +1,20 @@
+{
+  "info": {
+    "name": "GhostOS Remix Full - Postman",
+    "_postman_id": "ghostos-remix-full",
+    "description": "Simulate Shopify webhooks with HMAC computed in pre-request script",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Simulate checkouts/create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-Shopify-Hmac-Sha256", "value": "{{x_hmac}}" }],
+        "body": { "mode": "raw", "raw": "{\n  \"id\": 99999,\n  \"cart_token\": \"test-cart\",\n  \"customer\": { \"email\": \"test@example.com\" },\n  \"total_price\": 50\n}" },
+        "url": "{{runtime_url}}/api/webhooks/shopify/checkouts_create"
+      },
+      "event": [{ "listen": "prerequest", "script": { "exec": ["const payload = pm.request.body.raw; const secret = pm.environment.get('SHOPIFY_SHARED_SECRET'); const hash = CryptoJS.HmacSHA256(payload, secret).toString(CryptoJS.enc.Base64); pm.environment.set('x_hmac', hash);"], "type": "text/javascript" } }]
+    }
+  ]
+}
