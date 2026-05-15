@@ -1,0 +1,10 @@
+{
+  "name": "swarm-intel-remix-graphql",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "bootstrap": "node ghostos-shopify-bootstrap.mjs",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=18" }
+}
