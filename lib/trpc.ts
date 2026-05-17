@@ -1,35 +1,88 @@
 export type BillingStat = {
   label: string;
   revenue: number;
+  churn: number;
+  expansion: number;
 };
 
 export type BillingStatsResponse = {
   totalRevenue: number;
   mrr: number;
+  arr: number;
   points: BillingStat[];
 };
 
-const billing = {
-  async getStats(): Promise<BillingStatsResponse> {
-    const points: BillingStat[] = [
-      { label: "Mon", revenue: 4200 },
-      { label: "Tue", revenue: 5900 },
-      { label: "Wed", revenue: 6400 },
-      { label: "Thu", revenue: 7100 },
-      { label: "Fri", revenue: 8800 },
-      { label: "Sat", revenue: 7600 },
-      { label: "Sun", revenue: 9100 },
-    ];
-
-    const totalRevenue = points.reduce((sum, point) => sum + point.revenue, 0);
-    return {
-      totalRevenue,
-      mrr: 128_400,
-      points,
-    };
-  },
+export type OutcomeLogEntry = {
+  id: string;
+  agentId: string;
+  action: string;
+  payload: Record<string, unknown>;
+  consensusScore: number;
+  accepted: boolean;
+  createdAt: string;
 };
 
+export type WeightHistoryEntry = {
+  id: string;
+  strategy: string;
+  previousWeight: number;
+  newWeight: number;
+  delta: number;
+  reason: string;
+  outcomeLogId: string;
+  persistedRowCount: number;
+  createdAt: string;
+};
+
+export type StrategyMutationResponse = {
+  historyEntry: WeightHistoryEntry;
+  outcomeEntry: OutcomeLogEntry;
+  weightHistorySize: number;
+  outcomeLogSize: number;
+};
+
+export type TrpcProcedure = "billing.getStats" | "swarm.triggerStrategyMutation";
+
+type TrpcProcedureMap = {
+  "billing.getStats": BillingStatsResponse;
+  "swarm.triggerStrategyMutation": StrategyMutationResponse;
+};
+
+type TrpcEnvelope<TData> = {
+  data?: TData;
+  error?: string;
+};
+
+const trpcProcedures: readonly TrpcProcedure[] = ["billing.getStats", "swarm.triggerStrategyMutation"];
+
+export function isTrpcProcedure(value: string): value is TrpcProcedure {
+  return trpcProcedures.includes(value as TrpcProcedure);
+}
+
+async function callTrpcProcedure<TProcedure extends TrpcProcedure>(
+  procedure: TProcedure,
+): Promise<TrpcProcedureMap[TProcedure]> {
+  const response = await fetch(`/api/trpc/${procedure}`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ json: null }),
+  });
+  const envelope = (await response.json()) as TrpcEnvelope<TrpcProcedureMap[TProcedure]>;
+
+  if (!response.ok || envelope.error || !envelope.data) {
+    throw new Error(envelope.error ?? `tRPC procedure failed: ${procedure}`);
+  }
+
+  return envelope.data;
+}
+
 export const trpcClient = {
-  billing,
+  billing: {
+    getStats: () => callTrpcProcedure("billing.getStats"),
+  },
+  swarm: {
+    triggerStrategyMutation: () => callTrpcProcedure("swarm.triggerStrategyMutation"),
+  },
 };

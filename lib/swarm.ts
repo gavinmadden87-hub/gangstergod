@@ -1,32 +1,30 @@
+import {
+  outcomeLogRepository,
+  weightHistoryRepository,
+} from "./db/repositories";
+import { type SelectOutcomeLog, type SelectWeightHistory } from "./db/schema";
+
 export type BlackboardEvent = {
+  id: string;
   agentId: string;
   action: string;
   payload: Record<string, unknown>;
   createdAt: string;
 };
 
-export type OutcomeLogEntry = BlackboardEvent & {
-  consensusScore: number;
-  accepted: boolean;
-};
+export type OutcomeLogEntry = SelectOutcomeLog;
 
-export type WeightHistoryEntry = {
-  id: string;
-  strategy: string;
-  previousWeight: number;
-  newWeight: number;
-  delta: number;
-  reason: string;
-  createdAt: string;
-};
+export type WeightHistoryEntry = SelectWeightHistory;
 
 export class Blackboard {
   private readonly events: BlackboardEvent[] = [];
 
-  publish(event: Omit<BlackboardEvent, "createdAt">): BlackboardEvent {
+  publish(event: Omit<BlackboardEvent, "id" | "createdAt">): BlackboardEvent {
+    const createdAt = new Date().toISOString();
     const materialized: BlackboardEvent = {
       ...event,
-      createdAt: new Date().toISOString(),
+      id: `bb_${createdAt}_${this.events.length + 1}`,
+      createdAt,
     };
     this.events.push(materialized);
     return materialized;
@@ -50,19 +48,34 @@ export class ConsensusEngine {
   }
 }
 
-export const blackboard = new Blackboard();
-export const consensusEngine = new ConsensusEngine();
-
-export const outcomeLog: OutcomeLogEntry[] = [];
-export const weightHistory: WeightHistoryEntry[] = [];
-
-export function triggerStrategyMutation(input: {
+export type StrategyMutationInput = {
   agentId: string;
   strategy: string;
   previousWeight: number;
   signalStrength: number;
   reason: string;
-}): WeightHistoryEntry {
+};
+
+export type StrategyMutationResult = {
+  historyEntry: WeightHistoryEntry;
+  outcomeEntry: OutcomeLogEntry;
+  weightHistorySize: number;
+  outcomeLogSize: number;
+};
+
+export const blackboard = new Blackboard();
+export const consensusEngine = new ConsensusEngine();
+
+export async function getMutationCounts(): Promise<{ weightHistorySize: number; outcomeLogSize: number }> {
+  const [weightHistorySize, outcomeLogSize] = await Promise.all([
+    weightHistoryRepository.count(),
+    outcomeLogRepository.count(),
+  ]);
+
+  return { weightHistorySize, outcomeLogSize };
+}
+
+export async function triggerStrategyMutation(input: StrategyMutationInput): Promise<StrategyMutationResult> {
   const event = blackboard.publish({
     agentId: input.agentId,
     action: "strategy_mutation",
@@ -74,23 +87,33 @@ export function triggerStrategyMutation(input: {
   });
 
   const consensus = consensusEngine.evaluate(event);
-  outcomeLog.push({
-    ...event,
+  const outcomeEntry = await outcomeLogRepository.insert({
+    id: `ol_${Date.now()}`,
+    agentId: event.agentId,
+    action: event.action,
+    payload: event.payload,
     consensusScore: consensus.score,
     accepted: consensus.accepted,
+    createdAt: event.createdAt,
   });
 
   const delta = consensus.accepted ? input.signalStrength * 0.1 : -input.signalStrength * 0.05;
-  const entry: WeightHistoryEntry = {
+  const historyEntry = await weightHistoryRepository.insert({
     id: `wh_${Date.now()}`,
     strategy: input.strategy,
     previousWeight: input.previousWeight,
     newWeight: Number((input.previousWeight + delta).toFixed(4)),
     delta: Number(delta.toFixed(4)),
     reason: input.reason,
+    outcomeLogId: outcomeEntry.id,
     createdAt: new Date().toISOString(),
-  };
+  });
 
-  weightHistory.push(entry);
-  return entry;
+  const counts = await getMutationCounts();
+
+  return {
+    historyEntry,
+    outcomeEntry,
+    ...counts,
+  };
 }

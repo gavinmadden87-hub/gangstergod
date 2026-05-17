@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:web": "npx vercel@latest deploy --prod --yes",
+    "vercel:pull": "npx vercel@latest pull --yes --environment=production",
+    "vercel:build": "npx vercel@latest build --prod",
+    "vercel:deploy": "npx vercel@latest deploy --prebuilt --prod"
   },
   "dependencies": {
     "@ai-sdk/xai": "^1.0.5",
