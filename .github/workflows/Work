@@ -1,0 +1,5 @@
+git checkout work
+git remote -v
+# if origin is missing:
+git remote add origin <YOUR_GITHUB_REPO_URL>
+git push -u origin work
