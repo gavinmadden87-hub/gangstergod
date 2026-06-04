@@ -1,0 +1,72 @@
+ "using_cache": true,
+  "results": [
+    {
+      "name": "scientific-brainstorming",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-brainstorming",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-brainstorming",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "scientific-critical-thinking",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-critical-thinking",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-critical-thinking",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "scientific-schematics",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-schematics",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-schematics",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "scientific-slides",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-slides",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-slides",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "scientific-visualization",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-visualization",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-visualization",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "scientific-writing",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-writing",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills/tree/main/scientific-skills/scientific-writing",
+      "repository": "K-Dense-AI/claude-scientific-skills",
+      "stars": 6888,
+      "repo_type": "skills"
+    },
+    {
+      "name": "claude-scientific-skills",
+      "description": "",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills",
+      "source": "readme",
+      "repository": "travisvn/awesome-claude-skills",
+      "stars": 5747,
+      "repo_type": "curated_list"
+    },
+    {
+      "name": "claude-scientific-skills",
+      "description": "125+ scientific skills for bioinformatics, cheminformatics, clinical research, and machine learning.",
+      "github_url": "https://github.com/K-Dense-AI/claude-scientific-skills",
+      "import_url": "https://manus.im/app#settings/skills/import?githubUrl=https://github.com/K-Dense-AI/claude-scientific-skills",
+      "source": "readme",
+      "repository": "BehiSecc/awesome-claude-skills",
+      "stars": 4155,
+      "repo_type": "curated_list"
+    }
+  ]
+}
