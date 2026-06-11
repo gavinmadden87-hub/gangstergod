@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "deploy:web": "npx vercel@latest deploy --prod --yes",
     "vercel:pull": "npx vercel@latest pull --yes --environment=production",
     "vercel:build": "npx vercel@latest build --prod",
