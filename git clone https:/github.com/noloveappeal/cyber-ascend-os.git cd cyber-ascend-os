@@ -65,3 +65,53 @@ railway up
 git mv old_filename.js new_filename.js
 git commit -m "Rename old_filename to new_filename"
 git push origin main
+cd cyber-ascend-os && \
+mkdir -p src && \
+cat > src/index.ts << 'EOF'
+console.log("Cyber Ascend OS - Initialized");
+EOF
+cat > src/quantum-cascade-override.ts << 'EOF'
+export class QuantumCascadeOverride {
+  execute() {
+    console.log("QCO Protocol Activated");
+  }
+}
+EOF
+cat > tsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./build",
+    "strict": true
+  },
+  "include": ["src"]
+}
+EOF
+cat > package.json << 'EOF'
+{
+  "name": "cyber-ascend-os",
+  "version": "1.0.0",
+  "description": "Quantum cascade override system",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node build/index.js",
+    "deploy": "railway up"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
+EOF
+cat > README.md << 'EOF'
+# Cyber Ascend OS
+
+Advanced quantum cascade override and deployment system.
+
+## Setup
+```bash
+npm install
+npm run build
+npm start
