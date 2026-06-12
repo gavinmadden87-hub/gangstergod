@@ -56,3 +56,12 @@ Advanced quantum cascade override and deployment system.
 ## Deployment
 ```bash
 railway up
+---
+
+## **Method 4: Rename Files After Upload**
+
+### **Via Git (Before Pushing):**
+```bash
+git mv old_filename.js new_filename.js
+git commit -m "Rename old_filename to new_filename"
+git push origin main
