@@ -4,3 +4,25 @@ cp -r /path/to/your/project/* .
 git add .
 git commit -m "Initial project setup with core files"
 git push origin main
+cd cyber-ascend-os && \
+cat > package.json << 'EOF'
+{
+  "name": "cyber-ascend-os",
+  "version": "1.0.0",
+  "description": "Quantum cascade override system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "railway up"
+  },
+  "dependencies": {}
+}
+EOF
+cat > README.md << 'EOF'
+# Cyber Ascend OS
+
+Advanced quantum cascade override and deployment system.
+
+## Deployment
+```bash
+railway up
