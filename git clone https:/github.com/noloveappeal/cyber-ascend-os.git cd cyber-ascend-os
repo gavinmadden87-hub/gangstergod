@@ -116,3 +116,12 @@ npm install
 npm run build
 npm start
 railway up
+---
+
+## **Quick Verification**
+
+After pushing, verify files are in the repo:
+
+```bash
+git log --oneline
+git ls-files
