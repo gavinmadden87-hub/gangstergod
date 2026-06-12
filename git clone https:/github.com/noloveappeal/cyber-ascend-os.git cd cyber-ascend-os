@@ -1,3 +1,6 @@
 git clone https://github.com/noloveappeal/cyber-ascend-os.git
 cd cyber-ascend-os
 cp -r /path/to/your/project/* .
+git add .
+git commit -m "Initial project setup with core files"
+git push origin main
